@@ -5,8 +5,6 @@ export {
   fetchIngredientsFailed
 } from "./burgerBuilder";
 export {
-  purchaseBurgerSuccess,
-  purchaseBurgerFail,
   purchaseBurger,
   purchaseInit,
   fetchOrders

@@ -1,4 +1,5 @@
 import * as actionType from "../actions/actionTypes";
+import { updateObject } from "../utility";
 const INITIAL_PRICE = 4;
 
 const INGREDIENT_PRICES = {
@@ -17,41 +18,36 @@ const initialState = {
 const reducer = (state = initialState, action) => {
   switch(action.type) {
     case actionType.ADD_INGREDIENT: {
-      return {
-        ...state,
-        ingredients: {
-          ...state.ingredients,
-          [action.ingredientName]: state.ingredients[action.ingredientName] + 1
-        },
+      const updatedIngredient = { [action.ingredientName]: state.ingredients[action.ingredientName] + 1 }
+      const updatedIngredients = updateObject(state.ingredients, updatedIngredient);
+      const updatedState = {
+        ingredients: updatedIngredients,
         totalPrice: state.totalPrice + INGREDIENT_PRICES[action.ingredientName]
       }
+      return updateObject(state, updatedState);
     }
     case actionType.REMOVE_INGREDIENT: {
       const oldCount = state.ingredients[action.ingredientName];
       if (oldCount <= 0) {
         return state;
       }
-      return {
-        ...state,
-        ingredients: {
-          ...state.ingredients,
-          [action.ingredientName]: state.ingredients[action.ingredientName] - 1
-        },
+      const updatedIngredient = { [action.ingredientName]: state.ingredients[action.ingredientName] - 1 }
+      const updatedIngredients = updateObject(state.ingredients, updatedIngredient);
+      const updatedState = {
+        ingredients: updatedIngredients,
         totalPrice: state.totalPrice - INGREDIENT_PRICES[action.ingredientName]
       }
+      return updateObject(state, updatedState);
     }
     case actionType.SET_INGREDIENTS:
-      return {
-        ...state,
+      const updatedState = {
         ingredients: {...action.ingredients},
         error: false,
         totalPrice: INITIAL_PRICE
       }
+      return updateObject(state, updatedState);
     case actionType.FETCH_INGREDIENTS_FAILED:
-      return {
-        ...state,
-        error: true
-      }
+      return updateObject(state, { error: true })
     default: 
       return state;
   }
