@@ -4,6 +4,8 @@ import classes from "./Auth.css";
 import axios from "../../axios-orders";
 import Spinner from "../../components/UI/Spinner/Spinner";
 import Input from "../../components/UI/Input/Input";
+import { connect } from "react-redux";
+import * as actions from "../../store/actions/index";
 
 class Auth extends Component {
   state = {
@@ -84,6 +86,11 @@ class Auth extends Component {
     this.setState({controls: updatedControls});
   }
 
+  submitHandler = (event) => {
+    event.preventDefault();
+    this.props.onAuth(this.state.controls.email.value, this.state.controls.password.value);
+  }
+
   render() {
     let formElementArray = [];
     for (let key in this.state.controls) {
@@ -93,7 +100,7 @@ class Auth extends Component {
       })
     }
     let form = (
-      <form onSubmit={this.orderHandler}>
+      <form onSubmit={this.submitHandler}>
         {formElementArray.map(formElement => {
           return <Input key={formElement.id}
             elementType={formElement.config.elementType} 
@@ -104,7 +111,7 @@ class Auth extends Component {
             touched={formElement.config.touched}
             changed={(event) => this.inputChangedHandler(event, formElement.id)}/>
         })}
-        <Button btnType="Success" >SIGN IN</Button>
+        <Button btnType="Success">SIGN IN</Button>
       </form>
     );
     return (
@@ -115,4 +122,16 @@ class Auth extends Component {
   }
 }
 
-export default Auth;
+const mapStateToProps = state => {
+  return {
+
+  };
+}
+
+const mapDispatchToProps = dispatch => {
+  return {
+    onAuth: (email, password) => dispatch(actions.auth(email, password))
+  };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Auth);
