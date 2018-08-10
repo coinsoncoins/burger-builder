@@ -21,7 +21,6 @@ const order = (props) => {
       }}
       key={ig.name}>{ig.name} ({ig.amount})</span>;
   })
-  console.log(props.ingredients.bacon);
   return (
     <div className={classes.Order}>
     <p>Ingredients: {ingredientOutput}</p>
