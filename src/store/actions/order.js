@@ -31,17 +31,6 @@ export const purchaseInit = () => {
 export const purchaseBurger = (orderData) => {
   return dispatch => {
       dispatch(purchaseBurgerStart());
-      console.log("[ContactData] orderHandler");
-      // this.setState({loading: true});
-      // const formData = {};
-      // for (let key in this.state.orderForm) {
-      //   formData[key] = this.state.orderForm[key].value;
-      // }
-      // const order = {
-      //   ingredients: this.props.ingredients,
-      //   price: this.props.totalPrice,
-      //   orderData: formData
-      // }
       axios.post('/orders.json', orderData)
         .then(response => {
           console.log(response.data.id);
@@ -49,5 +38,30 @@ export const purchaseBurger = (orderData) => {
         }).catch(error => {
           dispatch(purchaseBurgerFail(error));
         })
+  }
+}
+
+export const setOrders = (orders) => {
+  return {
+    type: actionTypes.SET_ORDERS,
+    orders: orders
+  }
+}
+
+export const fetchOrders = () => {
+  return dispatch => {
+    axios.get("/orders.json")
+      .then((response) => {
+        const fetchedOrders = [];
+        for(let key in response.data) {
+          fetchedOrders.push({
+            ...response.data[key],
+            id: key
+          });
+        }
+        dispatch(setOrders(fetchedOrders));
+      }).catch((error) => {
+
+      })
   }
 }

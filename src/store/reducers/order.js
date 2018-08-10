@@ -2,6 +2,7 @@ import * as actionType from "../actions/actionTypes";
 
 const initialState = {
   orders: [],
+  ordersLoading: false,
   loading: false,
   purchased: false
 }
@@ -33,6 +34,12 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         purchased: false
+      }
+    case actionType.SET_ORDERS:
+      return {
+        ...state,
+        orders: [...action.orders],
+        ordersLoading: false
       }
     default:
       return state;
