@@ -11,7 +11,7 @@ import { connect } from 'react-redux';
 class Orders extends Component {
 
   componentDidMount() {
-    this.props.onInitLoad(this.props.token);
+    this.props.onInitLoad(this.props.token, this.props.userId);
   }
   render() {
     let orders = <Spinner />
@@ -37,13 +37,14 @@ const mapStateToProps = state => {
   return {
     loading: state.order.loading,
     orders: state.order.orders,
-    token: state.auth.token
+    token: state.auth.token,
+    userId: state.auth.userId
   }
 }
 
 const mapDispatchToProps = dispatch => {
   return {
-    onInitLoad: (token) => dispatch(actions.fetchOrders(token))
+    onInitLoad: (token, userId) => dispatch(actions.fetchOrders(token, userId))
   }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(withErrorHandler(Orders, axios));
