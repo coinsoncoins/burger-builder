@@ -106,23 +106,37 @@ class Auth extends Component {
         config: this.state.controls[key]
       })
     }
-    let form = (
-      <form onSubmit={this.submitHandler}>
-        {formElementArray.map(formElement => {
-          return <Input key={formElement.id}
-            elementType={formElement.config.elementType} 
-            elementConfig={formElement.config.elementConfig}
-            value={formElement.config.value} 
-            invalid={!formElement.config.valid}
-            shouldValidate={formElement.config.validation}
-            touched={formElement.config.touched}
-            changed={(event) => this.inputChangedHandler(event, formElement.id)}/>
-        })}
-        <Button btnType="Success">Submit</Button>
-      </form>
-    );
+    let form = <Spinner />
+    console.log(this.props.loading);
+    if (!this.props.loading) {
+      form = (
+        <form onSubmit={this.submitHandler}>
+          {formElementArray.map(formElement => {
+            return <Input key={formElement.id}
+              elementType={formElement.config.elementType} 
+              elementConfig={formElement.config.elementConfig}
+              value={formElement.config.value} 
+              invalid={!formElement.config.valid}
+              shouldValidate={formElement.config.validation}
+              touched={formElement.config.touched}
+              changed={(event) => this.inputChangedHandler(event, formElement.id)}/>
+          })}
+          <Button btnType="Success">Submit</Button>
+        </form>
+      );
+    }
+
+    let errorMessage = null;
+
+    if (this.props.error) {
+      errorMessage = (
+        <p>{this.props.error.message}</p>
+      );
+    }
+
     return (
       <div className={classes.Auth}>
+        {errorMessage}
         {form}
         <Button btnType="Success" clicked={this.switchAuthModeHandler}>Switch to {this.state.isSignup ? "Sign In" : "Sign Up"}</Button>
       </div>
@@ -132,7 +146,8 @@ class Auth extends Component {
 
 const mapStateToProps = state => {
   return {
-
+    loading: state.auth.loading,
+    error: state.auth.error
   };
 }
 
