@@ -11,21 +11,7 @@ import { connect } from 'react-redux';
 class Orders extends Component {
 
   componentDidMount() {
-    this.props.onInitLoad();
-    // axios.get("/orders.json")
-    //   .then((response) => {
-    //     const fetchedOrders = [];
-    //     for(let key in response.data) {
-    //       fetchedOrders.push({
-    //         ...response.data[key],
-    //         id: key
-    //       });
-    //     }
-    //     this.setState({orders: fetchedOrders, loading: false})
-    //   }).catch((error) => {
-    //     this.setState({loading: false});
-    //     console.log(error);
-    //   })
+    this.props.onInitLoad(this.props.token);
   }
   render() {
     let orders = <Spinner />
@@ -50,13 +36,14 @@ class Orders extends Component {
 const mapStateToProps = state => {
   return {
     loading: state.order.loading,
-    orders: state.order.orders
+    orders: state.order.orders,
+    token: state.auth.token
   }
 }
 
 const mapDispatchToProps = dispatch => {
   return {
-    onInitLoad: () => dispatch(actions.fetchOrders())
+    onInitLoad: (token) => dispatch(actions.fetchOrders(token))
   }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(withErrorHandler(Orders, axios));
