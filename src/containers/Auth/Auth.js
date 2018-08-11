@@ -6,6 +6,7 @@ import Spinner from "../../components/UI/Spinner/Spinner";
 import Input from "../../components/UI/Input/Input";
 import { connect } from "react-redux";
 import * as actions from "../../store/actions/index";
+import { Redirect } from 'react-router-dom';
 
 class Auth extends Component {
   state = {
@@ -74,16 +75,6 @@ class Auth extends Component {
         touched: true
       }
     }
-    // const updatedOrderForm = { ...this.state.controls };
-    // const updatedFormElement = { ...updatedOrderForm[inputName] };
-    // updatedFormElement.value = event.target.value;
-    // updatedFormElement.valid = this.checkValidity(updatedFormElement.value, updatedFormElement.validation);
-    // updatedFormElement.touched = true;
-    // updatedOrderForm[inputName] = updatedFormElement;
-    // let formIsValid = true;
-    // for (let key in this.state.orderForm) {
-    //   formIsValid = this.state.controls[key].valid && formIsValid;
-    // }
     this.setState({controls: updatedControls});
   }
 
@@ -134,8 +125,14 @@ class Auth extends Component {
       );
     }
 
+    let authRedirect = null;
+    if (this.props.isAuth) {
+      authRedirect = <Redirect to='/' />
+    }
+
     return (
       <div className={classes.Auth}>
+        {authRedirect}
         {errorMessage}
         {form}
         <Button btnType="Success" clicked={this.switchAuthModeHandler}>Switch to {this.state.isSignup ? "Sign In" : "Sign Up"}</Button>
@@ -147,7 +144,8 @@ class Auth extends Component {
 const mapStateToProps = state => {
   return {
     loading: state.auth.loading,
-    error: state.auth.error
+    error: state.auth.error,
+    isAuth: state.auth.token !== null
   };
 }
 

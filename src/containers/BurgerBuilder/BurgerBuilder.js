@@ -19,7 +19,11 @@ class BurgerBuilder extends Component {
     this.props.onInitIngredients()
   }
   purchaseHandler = () => {
-    this.setState({ purchasing: true })
+    if (this.props.isAuth) {
+      this.setState({ purchasing: true })
+    } else {
+      this.props.history.push('/auth');
+    }
   }
 
   purchaseCancelHandler = () => {
@@ -61,6 +65,7 @@ class BurgerBuilder extends Component {
             ordered={this.purchaseHandler}
             disabled={disabledInfo}
             price={this.props.totalPrice}
+            isAuth={this.props.isAuth}
             purchasable={this.wasAnyIngredientAdded(this.props.ingredients)}/>
         </React.Fragment>  
       );
@@ -86,7 +91,8 @@ const mapStateToProps = (state) => {
   return {
     ingredients: state.burgerBuilder.ingredients,
     totalPrice: state.burgerBuilder.totalPrice,
-    error: state.burgerBuilder.error
+    error: state.burgerBuilder.error,
+    isAuth: state.auth.token !== null
   }
 }
 
